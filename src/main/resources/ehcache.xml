@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <!-- 
+      * user.home：用户主目录
+      * user.dir：用户当前工作目录
+      * java.io.tmpdir：默认临时文件路径
+     -->
+    <diskStore path="java.io.tmpdir"/>
+    <!-- 
+      * maxElementsInMemory：设置基于内存的缓存可存放对象的最大数目
+      * maxElementsOnDisk：持久化到硬盘的缓存元素的最大数量
+      * eternal：缓存是否持久，为 true 时会忽略 timeToIdleSeconds 和 timeToLiveSeconds 属性
+      * timeToIdleSeconds：当缓存闲置 n 秒后销毁，0表示无限制时间
+      * timeToLiveSeconds：当缓存存活 n 秒后销毁，0表示无限制时间
+      * overflowToDisk：缓存中的对象数目达到了界限后，会写到硬盘的存中。该对象必须实现了 Serializable 接口
+      * memoryStoreEvictionPolicy：当达到maxElementsInMemory 限制时，Ehcache 将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）。
+     -->
+    <!-- 默认缓存 -->
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+    />
+    <!-- 正常缓存 -->
+    <cache name="normalCache"
+           maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           overflowToDisk="true"
+    />
+    <!-- 总是开启缓存 -->
+    <cache name="alwaysCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           overflowToDisk="true"
+    />
+</ehcache>

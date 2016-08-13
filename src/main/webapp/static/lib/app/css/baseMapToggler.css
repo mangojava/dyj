@@ -1,0 +1,31 @@
+.baseMapToggler > .baseMapInsideList > .baseMapInside {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 58px;
+    height: 58px;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.baseMapToggler > .baseMapInsideList > .baseMapInside:hover {
+    border: 1px solid #2693FF;
+    box-shadow: 0 0 6px #2693FF;
+}
+
+.baseMapToggler > .baseMapInsideList > .baseMapInside[selected="selected"] {
+    z-index: 2;
+}
+
+.baseMapToggler > .baseMapInsideList > .baseMapInside[expand="expand"],
+.baseMapToggler > .baseMapInsideList > .baseMapInside[expand="expand"]:hover {
+    border: 1px solid #2693FF;
+    box-shadow: 0 0 6px #2693FF;
+}
+
+.baseMapToggler > .baseMapInsideList > .baseMapInside > img {
+    width: 58px;
+    height: 58px;
+    border-radius: 4px;
+}

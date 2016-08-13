@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 引用数据库配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="localOverride" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:conf/db.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置数据源，使用 c3p0 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.userName}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="initialPoolSize" value="${c3p0.initialPoolSize}"/>
+        <property name="maxIdleTime" value="${c3p0.maxIdleTime}"/>
+        <property name="acquireIncrement" value="${c3p0.acquireIncrement}"/>
+        <property name="maxStatements" value="${c3p0.maxStatements}"/>
+        <property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}"/>
+        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+        <property name="acquireRetryDelay" value="${c3p0.acquireRetryDelay}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="breakAfterAcquireFailure" value="${c3p0.breakAfterAcquireFailure}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="numHelperThreads" value="${c3p0.numHelperThreads}"/>
+        <property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}"/>
+        <property name="testConnectionOnCheckin" value="${c3p0.testConnectionOnCheckin}"/>
+    </bean>
+
+    <!-- 配置 Hibernate 的 SessionFactory，交由 Spring 管理 -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.showSql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.formatSql}</prop>
+                <prop key="hibernate.use_sql_comments">${hibernate.useSqlComments}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.max_fetch_depth">${hibernate.maxFetchDepth}</prop>
+                <prop key="hibernate.default_batch_fetch_size">${hibernate.defaultBatchFetchSize}</prop>
+                <prop key="hibernate.jdbc.fetch_size">${hibernate.jdbc.fetchSize}</prop>
+                <prop key="hibernate.jdbc.batch_size">${hibernate.jdbc.batchSize}</prop>
+                <prop key="hibernate.current_session_context_class">${hibernate.currentSessionContextClass}</prop>
+                <prop key="hibernate.jdbc.use_scrollable_resultset">${hibernate.jdbc.useScrollableResultset}</prop>
+                <prop key="hibernate.cache.use_query_cache">${hibernate.cache.useQueryCache}</prop>
+                <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.useSecondLevelCache}</prop>
+                <prop key="hibernate.cache.use_structured_entries">${hibernate.cache.useStructuredEntries}</prop>
+                <prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factoryClass}</prop>
+            </props>
+        </property>
+        <!-- 扫描 Hibernate 的实体映射关系 -->
+        <property name="packagesToScan">
+            <list>
+                <value>${hibernate.packagesToScan}</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置 Spring 事务管理 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 配置注解事务管理 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+</beans>
